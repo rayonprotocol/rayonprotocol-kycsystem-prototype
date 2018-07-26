@@ -1,46 +1,48 @@
 pragma solidity ^0.4.19;
 
-import "./KycAttester.sol";
+import "./AddressBoolIterableMapImpl.sol";
 
 contract KycAttesterManager {
-    KycAttester internal kycAttester;
+    AddressBoolIterableMap internal kycAttesterMap;
+
+    // Todo : onlyOwner needed
 
     constructor(address _contractAddress) public {
-        setKycAttester(_contractAddress);
+        setKycAttesterMap(_contractAddress);
     }
 
-    function setKycAttester(address _contractAddress) public {
-        kycAttester = KycAttester(_contractAddress);
+    function setKycAttesterMap(address _contractAddress) public {
+        kycAttesterMap = AddressBoolIterableMapImpl(_contractAddress);
     }
     function getKycAttester() public view returns (address) {
-        return kycAttester;
+        return kycAttesterMap;
     }
 
     function add(address _attesterId) public {
-        kycAttester.add(_attesterId);
+        kycAttesterMap.add(_attesterId, true);
     }
 
     function remove(address _attesterId) public {
-        kycAttester.remove(_attesterId);
+        kycAttesterMap.remove(_attesterId);
     }
     
     function size() public view returns (uint) {
-        return kycAttester.size();
+        return kycAttesterMap.size();
     }
     
     function contains(address _key) public view returns (bool) {
-        return kycAttester.contains(_key);
+        return kycAttesterMap.contains(_key);
     }
     
     function getByKey(address _key) public view returns (bool) {
-        return kycAttester.getByKey(_key);
+        return kycAttesterMap.getByKey(_key);
     }
     
     function getByIndex(uint _index) public view returns (bool) {
-        return kycAttester.getByIndex(_index);
+        return kycAttesterMap.getByIndex(_index);
     }
 
     function getKeys() public view returns (address[]) {
-        return kycAttester.getKeys();
+        return kycAttesterMap.getKeys();
     }
 }

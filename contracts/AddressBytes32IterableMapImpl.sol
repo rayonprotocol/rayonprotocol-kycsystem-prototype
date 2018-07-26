@@ -1,16 +1,16 @@
 pragma solidity ^0.4.19;
 
-import "./AddressBoolIterableMap.sol";
+import "./AddressBytes32IterableMap.sol";
 
-contract AddressBoolIterableMapImpl is AddressBoolIterableMap {
+contract AddressBytes32IterableMapImpl is AddressBytes32IterableMap {
     struct Entry{
         uint index; // index start 1 to list.length
-        bool value;
+        bytes32 value;
     }
     mapping(address => Entry) private map;
     address[] private list;
 
-    function add(address _key, bool _value) public {
+    function add(address _key, bytes32 _value) public {
         Entry storage entry = map[_key];
         entry.value = _value;
         if(entry.index > 0){ // entry exists
@@ -45,11 +45,11 @@ contract AddressBoolIterableMapImpl is AddressBoolIterableMap {
         return map[_key].index > 0;
     }
     
-    function getByKey(address _key) public view returns (bool) {
+    function getByKey(address _key) public view returns (bytes32) {
         return map[_key].value;
     }
     
-    function getByIndex(uint _index) public view returns (bool) {
+    function getByIndex(uint _index) public view returns (bytes32) {
         require(_index >= 0);
         require(_index < list.length);
         return map[list[_index]].value;

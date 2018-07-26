@@ -1,14 +1,14 @@
-const KycAttester = artifacts.require('./KycAttester.sol');
+const AddressBoolIterableMapImpl = artifacts.require('./AddressBoolIterableMapImpl.sol');
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
 
-contract('KycAttester', function (accounts) {
+contract('KycAttesterManager', function (accounts) {
     var kycAttesterManagerContract;
     before('setup contract for each test', async () => {
-        var kycAttesterContract = await KycAttester.deployed();
-        kycAttesterManagerContract = await KycAttester.deployed(kycAttesterContract.address);
+        var kycAttesterMapContract = await AddressBoolIterableMapImpl.deployed();
+        kycAttesterManagerContract = await KycAttesterManager.deployed(kycAttesterMapContract.address);
 
-        console.log('KycAttester is deployed: ' + kycAttesterManagerContract.address);
-        console.log('KycAttesterManager is deployed: ' + kycAttesterManagerContract.address);
+        console.log('kycAttesterMap is deployed: ' + kycAttesterMapContract.address);
+        console.log('kycAttesterManager is deployed: ' + kycAttesterManagerContract.address);
         console.log('Account list contains ' + accounts.length + ' entries');
         var i;
         for (i = 0; i < accounts.length; i++) {
@@ -152,4 +152,6 @@ contract('KycAttester', function (accounts) {
         assert.equal(attesterIds[1], account4);
         assert.equal(await kycAttesterManagerContract.getByKey(attesterIds[1]), true);
     });
+
+    // TODO : only admin(owner) is permitted to execute this operations
 })
