@@ -1,12 +1,11 @@
-// const AddressBoolIterableMap = artifacts.require('./AddressBoolIterableMapImpl.sol')
+const AddressBoolIterableMapImpl = artifacts.require('./AddressBoolIterableMapImpl.sol')
 const KycAttester = artifacts.require('./KycAttester.sol')
+const KycAttesterManager = artifacts.require('./KycAttesterManager.sol')
 
 module.exports = function (deployer) {
-  var kycAttesterContract;
-  // deployer.deploy(AddressBoolIterableMap);
+  deployer.deploy(AddressBoolIterableMapImpl);
   deployer.deploy(KycAttester).then(function(){
-    kycAttesterContract = KycAttester;
+    var kycAttesterContract = KycAttester;
+    deployer.deploy(KycAttesterManager, kycAttesterContract.address);
   });
-
-//    deployer.deploy(TokenStorage, team1_address, team2_address, team3_address);
 }
