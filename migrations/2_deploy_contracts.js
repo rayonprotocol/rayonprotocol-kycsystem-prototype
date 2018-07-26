@@ -1,7 +1,9 @@
+// const AddressBoolIterableMap = artifacts.require('./AddressBoolIterableMapImpl.sol')
 const KycAttester = artifacts.require('./KycAttester.sol')
 
 module.exports = function (deployer) {
   var kycAttesterContract;
+  // deployer.deploy(AddressBoolIterableMap);
   deployer.deploy(KycAttester).then(function(){
     kycAttesterContract = KycAttester;
   });

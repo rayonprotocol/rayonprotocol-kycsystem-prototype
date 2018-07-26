@@ -26,8 +26,8 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 1);
         assert.equal(await kycAttesterContract.contains(account1), true);
-        assert.equal(await kycAttesterContract.getById(account1), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account1), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 1);
         assert.equal(attesterIds[0], account1);
     });
@@ -35,16 +35,16 @@ contract('KycAttester', function (accounts) {
         var account1 = accounts[0];
         assert.equal(await kycAttesterContract.size(), 1);
         assert.equal(await kycAttesterContract.contains(account1), true);
-        assert.equal(await kycAttesterContract.getById(account1), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account1), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 1);
         
         await kycAttesterContract.remove(account1);
         
         assert.equal(await kycAttesterContract.size(), 0);
         assert.equal(await kycAttesterContract.contains(account1), false);
-        assert.equal(await kycAttesterContract.getById(account1), false);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account1), false);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 0);
     });
     it("Add first & second accounts", async () => {
@@ -56,8 +56,8 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 1);
         assert.equal(await kycAttesterContract.contains(account1), true);
-        assert.equal(await kycAttesterContract.getById(account1), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account1), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 1);
         assert.equal(attesterIds[0], account1);
 
@@ -66,8 +66,8 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 2);
         assert.equal(await kycAttesterContract.contains(account2), true);
-        assert.equal(await kycAttesterContract.getById(account2), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account2), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 2);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -77,8 +77,8 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 2);
         assert.equal(await kycAttesterContract.contains(account2), true);
-        assert.equal(await kycAttesterContract.getById(account2), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account2), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 2);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -94,8 +94,8 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 3);
         assert.equal(await kycAttesterContract.contains(account3), true);
-        assert.equal(await kycAttesterContract.getById(account3), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account3), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 3);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -106,8 +106,8 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 4);
         assert.equal(await kycAttesterContract.contains(account4), true);
-        assert.equal(await kycAttesterContract.getById(account4), true);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account4), true);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 4);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -125,27 +125,27 @@ contract('KycAttester', function (accounts) {
 
         assert.equal(await kycAttesterContract.size(), 3);
         assert.equal(await kycAttesterContract.contains(account2), false);
-        assert.equal(await kycAttesterContract.getById(account2), false);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account2), false);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 3);
         assert.equal(attesterIds[0], account1);
-        assert.equal(await kycAttesterContract.getById(attesterIds[0]), true);
+        assert.equal(await kycAttesterContract.getByKey(attesterIds[0]), true);
         assert.equal(attesterIds[1], account4);
-        assert.equal(await kycAttesterContract.getById(attesterIds[1]), true);
+        assert.equal(await kycAttesterContract.getByKey(attesterIds[1]), true);
         assert.equal(attesterIds[2], account3);
-        assert.equal(await kycAttesterContract.getById(attesterIds[2]), true);
+        assert.equal(await kycAttesterContract.getByKey(attesterIds[2]), true);
 
         // remove first account
         await kycAttesterContract.remove(account1);
 
         assert.equal(await kycAttesterContract.size(), 2);
         assert.equal(await kycAttesterContract.contains(account1), false);
-        assert.equal(await kycAttesterContract.getById(account1), false);
-        var attesterIds = await kycAttesterContract.getIds();
+        assert.equal(await kycAttesterContract.getByKey(account1), false);
+        var attesterIds = await kycAttesterContract.getKeys();
         assert.equal(attesterIds.length, 2);
         assert.equal(attesterIds[0], account3);
-        assert.equal(await kycAttesterContract.getById(attesterIds[0]), true);
+        assert.equal(await kycAttesterContract.getByKey(attesterIds[0]), true);
         assert.equal(attesterIds[1], account4);
-        assert.equal(await kycAttesterContract.getById(attesterIds[1]), true);
+        assert.equal(await kycAttesterContract.getByKey(attesterIds[1]), true);
     });
 })
