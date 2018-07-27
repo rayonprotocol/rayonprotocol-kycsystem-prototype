@@ -63,9 +63,20 @@ app.listen(port, function () {
     console.log("KYC Prototype server is running on port " + port + "!");
 });
 
-app.post('/:address', function (req, res) {
+app.get('/', function (req, res) { // get attester info
+    console.log("Request, url: /");
+
+    var resBody = new Object();
+    resBody.attesterId = attesterId;
+
+    // send response
+    console.log("Response, url: /, body: " + JSON.stringify(resBody));
+    res.send(resBody);
+});
+
+app.post('/:address', function (req, res) { // authenticate auth id
     const address = req.params.address;
-    console.log("New request, address: " + address + ", body: " + JSON.stringify(req.body));
+    console.log("New request, url: /" + address + ", body: " + JSON.stringify(req.body));
     const authId = req.body.id; // id in the request is used as authId.
     const authHash = web3.utils.sha3(authId);
     const signatureData = web3.eth.accounts.sign(authHash, wallet.getPrivateKeyString());
@@ -87,6 +98,6 @@ app.post('/:address', function (req, res) {
     resBody.s = s;
 
     // send response
-    console.log("Response, address: " + address + ", body: " + JSON.stringify(resBody));
+    console.log("Response, url: /" + address + ", body: " + JSON.stringify(resBody));
     res.send(resBody);
 });

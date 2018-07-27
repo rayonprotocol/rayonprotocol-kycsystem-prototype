@@ -1,11 +1,11 @@
-const AddressBoolIterableMapImpl = artifacts.require('./AddressBoolIterableMapImpl.sol');
+const KycAttesterMap = artifacts.require('./KycAttesterMap.sol');
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
 
 contract('KycAttesterManager', function (accounts) {
     var kycAttesterManagerContract;
     before('setup contract for each test', async () => {
-        var kycAttesterMapContract = await AddressBoolIterableMapImpl.deployed();
-        kycAttesterManagerContract = await KycAttesterManager.deployed(kycAttesterMapContract.address);
+        var kycAttesterMapContract = await KycAttesterMap.new();
+        kycAttesterManagerContract = await KycAttesterManager.new(kycAttesterMapContract.address);
 
         console.log('kycAttesterMap is deployed: ' + kycAttesterMapContract.address);
         console.log('kycAttesterManager is deployed: ' + kycAttesterManagerContract.address);
