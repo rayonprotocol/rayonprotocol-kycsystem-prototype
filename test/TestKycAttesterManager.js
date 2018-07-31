@@ -2,18 +2,40 @@ const KycAttesterMap = artifacts.require('./KycAttesterMap.sol');
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
 
 contract('KycAttesterManager', function (accounts) {
+    var kycAttesterMapContract;
     var kycAttesterManagerContract;
     before('setup contract for each test', async () => {
-        var kycAttesterMapContract = await KycAttesterMap.new();
+        kycAttesterMapContract = await KycAttesterMap.new();
         kycAttesterManagerContract = await KycAttesterManager.new(kycAttesterMapContract.address);
 
         console.log('kycAttesterMap is deployed: ' + kycAttesterMapContract.address);
+        var kycAttesterMapContractOwner = await kycAttesterMapContract.owner()
+        console.log('kycAttesterMap\'s owner: ' + kycAttesterMapContractOwner);
+        assert.equal(kycAttesterMapContractOwner, accounts[0]);
+        
         console.log('kycAttesterManager is deployed: ' + kycAttesterManagerContract.address);
-        console.log('Account list contains ' + accounts.length + ' entries');
-        var i;
-        for (i = 0; i < accounts.length; i++) {
-            console.log(' ' + i + ': ' + accounts[i]);
-        }
+        var kycAttesterManagerContractOwner = await kycAttesterManagerContract.owner()
+        console.log('kycAttesterManager\'s owner: ' + kycAttesterManagerContractOwner);
+        assert.equal(kycAttesterManagerContractOwner, accounts[0]);
+        
+        console.log('Change kycAttesterMap\'s owner to kycAttesterManager');
+        await kycAttesterMapContract.transferOwnership(kycAttesterManagerContract.address); // transfer to pending owner
+        kycAttesterMapContractOwner = await kycAttesterMapContract.owner()
+        assert.equal(kycAttesterMapContractOwner, accounts[0]); 
+        kycAttesterMapContractPendingOwner = await kycAttesterMapContract.pendingOwner()
+        console.log('kycAttesterMap\'s pending owner: ' + kycAttesterMapContractPendingOwner);
+        assert.equal(kycAttesterMapContractPendingOwner, kycAttesterManagerContract.address); 
+        
+        await kycAttesterManagerContract.claimOwnershipContract(kycAttesterMapContract.address); // transfer claimed
+        kycAttesterMapContractOwner = await kycAttesterMapContract.owner()
+        console.log('kycAttesterMap\'s owner: ' + kycAttesterMapContractOwner);
+        assert.equal(kycAttesterMapContractOwner, kycAttesterManagerContract.address);
+        console.log('Changed kycAttesterMap\'s owner: ' + kycAttesterMapContractOwner);
+        // console.log('Account list contains ' + accounts.length + ' entries');
+        // var i;
+        // for (i = 0; i < accounts.length; i++) {
+        //     console.log(' ' + i + ': ' + accounts[i]);
+        // }
     })
 
     it("Check empty list", async () => {
@@ -30,8 +52,8 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 1);
         assert.equal(await kycAttesterManagerContract.contains(account1), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account1), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account1), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 1);
         assert.equal(attesterIds[0], account1);
     });
@@ -39,16 +61,16 @@ contract('KycAttesterManager', function (accounts) {
         var account1 = accounts[0];
         assert.equal(await kycAttesterManagerContract.size(), 1);
         assert.equal(await kycAttesterManagerContract.contains(account1), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account1), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account1), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 1);
         
         await kycAttesterManagerContract.remove(account1);
         
         assert.equal(await kycAttesterManagerContract.size(), 0);
         assert.equal(await kycAttesterManagerContract.contains(account1), false);
-        assert.equal(await kycAttesterManagerContract.getByKey(account1), false);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account1), false);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 0);
     });
     it("Add first & second accounts", async () => {
@@ -60,8 +82,8 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 1);
         assert.equal(await kycAttesterManagerContract.contains(account1), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account1), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account1), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 1);
         assert.equal(attesterIds[0], account1);
 
@@ -70,8 +92,8 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 2);
         assert.equal(await kycAttesterManagerContract.contains(account2), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account2), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account2), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 2);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -81,8 +103,8 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 2);
         assert.equal(await kycAttesterManagerContract.contains(account2), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account2), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account2), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 2);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -98,8 +120,8 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 3);
         assert.equal(await kycAttesterManagerContract.contains(account3), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account3), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account3), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 3);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -110,8 +132,8 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 4);
         assert.equal(await kycAttesterManagerContract.contains(account4), true);
-        assert.equal(await kycAttesterManagerContract.getByKey(account4), true);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account4), true);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 4);
         assert.equal(attesterIds[0], account1);
         assert.equal(attesterIds[1], account2);
@@ -129,29 +151,46 @@ contract('KycAttesterManager', function (accounts) {
 
         assert.equal(await kycAttesterManagerContract.size(), 3);
         assert.equal(await kycAttesterManagerContract.contains(account2), false);
-        assert.equal(await kycAttesterManagerContract.getByKey(account2), false);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account2), false);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 3);
         assert.equal(attesterIds[0], account1);
-        assert.equal(await kycAttesterManagerContract.getByKey(attesterIds[0]), true);
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(attesterIds[0]), true);
         assert.equal(attesterIds[1], account4);
-        assert.equal(await kycAttesterManagerContract.getByKey(attesterIds[1]), true);
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(attesterIds[1]), true);
         assert.equal(attesterIds[2], account3);
-        assert.equal(await kycAttesterManagerContract.getByKey(attesterIds[2]), true);
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(attesterIds[2]), true);
 
         // remove first account
         await kycAttesterManagerContract.remove(account1);
 
         assert.equal(await kycAttesterManagerContract.size(), 2);
         assert.equal(await kycAttesterManagerContract.contains(account1), false);
-        assert.equal(await kycAttesterManagerContract.getByKey(account1), false);
-        var attesterIds = await kycAttesterManagerContract.getKeys();
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(account1), false);
+        var attesterIds = await kycAttesterManagerContract.getAttesterIds();
         assert.equal(attesterIds.length, 2);
         assert.equal(attesterIds[0], account3);
-        assert.equal(await kycAttesterManagerContract.getByKey(attesterIds[0]), true);
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(attesterIds[0]), true);
         assert.equal(attesterIds[1], account4);
-        assert.equal(await kycAttesterManagerContract.getByKey(attesterIds[1]), true);
+        assert.equal(await kycAttesterManagerContract.getByAttesterId(attesterIds[1]), true);
     });
 
     // TODO : only admin(owner) is permitted to execute this operations
+
+    after('after test, transfer ownership to deployed account', async () => {
+        console.log('Change kycAttesterMap\'s owner to account[0]');
+        await kycAttesterManagerContract.reclaimContract(kycAttesterMapContract.address); // transfer to pending owner
+        kycAttesterMapContractOwner = await kycAttesterMapContract.owner()
+        assert.equal(kycAttesterMapContractOwner, kycAttesterManagerContract.address); 
+        kycAttesterMapContractPendingOwner = await kycAttesterMapContract.pendingOwner()
+        console.log('kycAttesterMap\'s pending owner: ' + kycAttesterMapContractPendingOwner);
+        assert.equal(kycAttesterMapContractPendingOwner, accounts[0]); 
+        
+        await kycAttesterMapContract.claimOwnership(); // transfer claimed
+        kycAttesterMapContractOwner = await kycAttesterMapContract.owner()
+        console.log('kycAttesterMap\'s owner: ' + kycAttesterMapContractOwner);
+        assert.equal(kycAttesterMapContractOwner, accounts[0]);
+        console.log('Changed kycAttesterMap\'s owner: ' + kycAttesterMapContractOwner);
+    })
+
 })

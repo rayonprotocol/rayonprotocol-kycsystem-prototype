@@ -1,34 +1,40 @@
 pragma solidity ^0.4.19;
 
+import "./RayonBasic.sol";
 import "./AddressBoolIterableMapImpl.sol";
 
-// TODO: add authorization only for permitted account.
-contract KycAttesterMap is AddressBoolIterableMapImpl {
-    function add(address _key, bool _value) public {
-        super._add(_key, _value);
+contract KycAttesterMap is AddressBoolIterableMapImpl, RayonBasic {
+    // Event defination
+    event KycAttesterAdded(address indexed attesterId);
+    event KycAttesterRemoved(address indexed attesterId);
+
+    function add(address _attesterId) public onlyOwner {
+        super._add(_attesterId, true);
+        emit KycAttesterAdded(_attesterId);
     }
 
-    function remove(address _key) public {
-        super._remove(_key);
+    function remove(address _attesterId) public onlyOwner {
+        super._remove(_attesterId);
+        emit KycAttesterRemoved(_attesterId);
     }
     
-    function size() public view returns (uint) {
+    function size() public view onlyOwner returns (uint) {
         return super._size();
     }
     
-    function contains(address _key) public view returns (bool) {
-        return super._contains(_key);
+    function contains(address _attesterId) public view returns (bool) {
+        return super._contains(_attesterId);
     }
     
-    function getByKey(address _key) public view returns (bool) {
-        return super._getByKey(_key);
+    function getByAttesterId(address _attesterId) public view returns (bool) {
+        return super._getByKey(_attesterId);
     }
     
-    function getByIndex(uint _index) public view returns (bool) {
+    function getByIndex(uint _index) public view onlyOwner returns (bool) {
         return super._getByIndex(_index);
     }
 
-    function getKeys() public view returns (address[]) {
+    function getAttesterIds() public view onlyOwner returns (address[]) {
         return super._getKeys();
     }
 }

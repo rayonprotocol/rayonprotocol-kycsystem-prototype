@@ -1,52 +1,47 @@
 pragma solidity ^0.4.19;
 
+import "./RayonBasic.sol";
 import "./KycAttesterMap.sol";
 
-contract KycAttesterManager {
+contract KycAttesterManager is RayonBasic {
     KycAttesterMap internal kycAttesterMap;
-
-    // TODO : onlyOwner needed
-    // event definition
 
     constructor(address _contractAddress) public {
         setKycAttesterMap(_contractAddress);
     }
 
-    function setKycAttesterMap(address _contractAddress) public {
+    function setKycAttesterMap(address _contractAddress) public onlyOwner {
         kycAttesterMap = KycAttesterMap(_contractAddress);
-        // TODO : emit event
     }
     function getKycAttester() public view returns (address) {
         return kycAttesterMap;
     }
 
-    function add(address _attesterId) public {
-        kycAttesterMap.add(_attesterId, true);
-        // TODO : emit event
+    function add(address _attesterId) public onlyOwner {
+        kycAttesterMap.add(_attesterId);
     }
 
-    function remove(address _attesterId) public {
+    function remove(address _attesterId) public onlyOwner {
         kycAttesterMap.remove(_attesterId);
-        // TODO : emit event
     }
     
-    function size() public view returns (uint) {
+    function size() public view onlyOwner returns (uint) {
         return kycAttesterMap.size();
     }
     
-    function contains(address _key) public view returns (bool) {
-        return kycAttesterMap.contains(_key);
+    function contains(address _attesterId) public view returns (bool) {
+        return kycAttesterMap.contains(_attesterId);
     }
     
-    function getByKey(address _key) public view returns (bool) {
-        return kycAttesterMap.getByKey(_key);
+    function getByAttesterId(address _attesterId) public view returns (bool) {
+        return kycAttesterMap.getByAttesterId(_attesterId);
     }
     
-    function getByIndex(uint _index) public view returns (bool) {
+    function getByIndex(uint _index) public view onlyOwner returns (bool) {
         return kycAttesterMap.getByIndex(_index);
     }
 
-    function getKeys() public view returns (address[]) {
-        return kycAttesterMap.getKeys();
+    function getAttesterIds() public view onlyOwner returns (address[]) {
+        return kycAttesterMap.getAttesterIds();
     }
 }
