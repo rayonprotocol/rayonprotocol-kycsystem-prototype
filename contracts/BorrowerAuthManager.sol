@@ -1,16 +1,19 @@
 pragma solidity ^0.4.19;
 
-import "./AddressBytes32IterableMapImpl.sol";
+import "./BorrowerAuthMap.sol";
 
 contract BorrowerAuthManager {
-    AddressBytes32IterableMap internal borrowerAuthMap;
+    BorrowerAuthMap internal borrowerAuthMap;
+
+    // event definition
 
     constructor(address _contractAddress) public {
         setBorrowerAuthMap(_contractAddress);
     }
 
     function setBorrowerAuthMap(address _contractAddress) public {
-        borrowerAuthMap = AddressBytes32IterableMapImpl(_contractAddress);
+        borrowerAuthMap = BorrowerAuthMap(_contractAddress);
+        // TODO : emit event
     }
     function getBorrowerAuthMap() public view returns (address) {
         return borrowerAuthMap;
@@ -27,6 +30,7 @@ contract BorrowerAuthManager {
         }else{ // unmatched signatures
             return false;
         }
+        // TODO : emit event
     }
 
     function size() public view returns (uint) {

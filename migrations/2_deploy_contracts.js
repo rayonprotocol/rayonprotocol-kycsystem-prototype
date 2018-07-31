@@ -1,15 +1,19 @@
-const AddressBoolIterableMapImpl = artifacts.require('./AddressBoolIterableMapImpl.sol')
+const KycAttesterMap = artifacts.require('./KycAttesterMap.sol')
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol')
-const AddressStringIterableMapImpl = artifacts.require('./AddressStringIterableMapImpl.sol')
+const BorrowerAuthMap = artifacts.require('./BorrowerAuthMap.sol')
 const BorrowerAuthManager = artifacts.require('./BorrowerAuthManager.sol')
+const TestAddressBoolIterableMap = artifacts.require('./TestAddressBoolIterableMap.sol')
 
 module.exports = function (deployer) {
   // KycAttesterManager
-  deployer.deploy(AddressBoolIterableMapImpl).then(function () {
-    deployer.deploy(KycAttesterManager, AddressBoolIterableMapImpl.address);
+  deployer.deploy(KycAttesterMap).then(function () {
+    deployer.deploy(KycAttesterManager, KycAttesterMap.address);
   });
   // BorrowerAuthManager
-  deployer.deploy(AddressStringIterableMapImpl).then(function () {
-    deployer.deploy(BorrowerAuthManager, AddressStringIterableMapImpl.address);
+  deployer.deploy(BorrowerAuthMap).then(function () {
+    deployer.deploy(BorrowerAuthManager, BorrowerAuthMap.address);
   });
+  
+  // TestAddressBoolIterableMap
+  deployer.deploy(TestAddressBoolIterableMap);
 }

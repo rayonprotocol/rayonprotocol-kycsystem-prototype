@@ -1,10 +1,10 @@
 pragma solidity ^0.4.19;
 
-import "./AddressBoolIterableMapImpl.sol";
+import "./AddressBytes32IterableMapImpl.sol";
 
 // TODO: add authorization only for permitted account.
-contract KycAttesterMap is AddressBoolIterableMapImpl {
-    function add(address _key, bool _value) public {
+contract BorrowerAuthMap is AddressBytes32IterableMapImpl {
+    function add(address _key, bytes32 _value) public {
         super._add(_key, _value);
     }
 
@@ -20,11 +20,11 @@ contract KycAttesterMap is AddressBoolIterableMapImpl {
         return super._contains(_key);
     }
     
-    function getByKey(address _key) public view returns (bool) {
+    function getByKey(address _key) public view returns (bytes32) {
         return super._getByKey(_key);
     }
     
-    function getByIndex(uint _index) public view returns (bool) {
+    function getByIndex(uint _index) public view returns (bytes32) {
         return super._getByIndex(_index);
     }
 

@@ -2,8 +2,8 @@ pragma solidity ^0.4.19;
 
 import "./AddressBoolIterableMapImpl.sol";
 
-// TODO: add authorization only for permitted account.
-contract KycAttesterMap is AddressBoolIterableMapImpl {
+// Simple AddressBoolIterableMap Contract for Test
+contract TestAddressBoolIterableMap is AddressBoolIterableMapImpl {
     function add(address _key, bool _value) public {
         super._add(_key, _value);
     }

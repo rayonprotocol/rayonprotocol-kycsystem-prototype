@@ -47,7 +47,6 @@ contract('KycAuthStory1', function (accounts) {
     })
 
     it("Add KYC Attester ID to KycAttegerManager", async () => {
-        // try {
         var res = request('GET', kycSystemUrl);
         kycAttesterId = JSON.parse(res.body.toString('utf-8')).attesterId;
         console.log('KYC Attester ID : ' + kycAttesterId);
@@ -61,13 +60,8 @@ contract('KycAuthStory1', function (accounts) {
         var keys = await kycAttesterManagerContract.getKeys();
         assert.equal(keys.length, 1);
         assert.equal(keys[0], kycAttesterId);
-        // } catch (exception) {
-        //     console.log(exception.message);
-        //     assert.fail();
-        // }
     });
     it("Authentication & Store borrower1's auth id", async () => {
-        // try {
         var borrowerAccount = borrowerAccount1;
         var borrowerAuthId = borrowerAuthId1;
 
@@ -92,11 +86,6 @@ contract('KycAuthStory1', function (accounts) {
         var keys = await borrowerAuthManagerContract.getBorrowers();
         assert.equal(keys.length, 1);
         assert.equal(keys[0], borrowerAccount);
-
-        // } catch (exception) {
-        //     console.log(exception.message);
-        //     assert.fail();
-        // }
     });
     it("Get borrower1's auth id and verify from lender", async () => {
         var borrowerAccount = borrowerAccount1;

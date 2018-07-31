@@ -1,11 +1,11 @@
 pragma solidity ^0.4.19;
 
 contract AddressBoolIterableMap {
-    function add(address _key, bool _value) public;
-    function remove(address _key) public;
-    function size() public view returns (uint);
-    function contains(address _key) public view returns (bool);
-    function getByKey(address _key) public view returns (bool);
-    function getByIndex(uint _index) public view returns (bool);
-    function getKeys() public view returns (address[]);
+    function _add(address _key, bool _value) internal;
+    function _remove(address _key) internal;
+    function _size() internal view returns (uint);
+    function _contains(address _key) internal view returns (bool);
+    function _getByKey(address _key) internal view returns (bool);
+    function _getByIndex(uint _index) internal view returns (bool);
+    function _getKeys() internal view returns (address[]);
 }

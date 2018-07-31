@@ -1,18 +1,20 @@
 pragma solidity ^0.4.19;
 
-import "./AddressBoolIterableMapImpl.sol";
+import "./KycAttesterMap.sol";
 
 contract KycAttesterManager {
-    AddressBoolIterableMap internal kycAttesterMap;
+    KycAttesterMap internal kycAttesterMap;
 
-    // Todo : onlyOwner needed
+    // TODO : onlyOwner needed
+    // event definition
 
     constructor(address _contractAddress) public {
         setKycAttesterMap(_contractAddress);
     }
 
     function setKycAttesterMap(address _contractAddress) public {
-        kycAttesterMap = AddressBoolIterableMapImpl(_contractAddress);
+        kycAttesterMap = KycAttesterMap(_contractAddress);
+        // TODO : emit event
     }
     function getKycAttester() public view returns (address) {
         return kycAttesterMap;
@@ -20,10 +22,12 @@ contract KycAttesterManager {
 
     function add(address _attesterId) public {
         kycAttesterMap.add(_attesterId, true);
+        // TODO : emit event
     }
 
     function remove(address _attesterId) public {
         kycAttesterMap.remove(_attesterId);
+        // TODO : emit event
     }
     
     function size() public view returns (uint) {

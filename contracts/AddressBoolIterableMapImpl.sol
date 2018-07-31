@@ -7,10 +7,10 @@ contract AddressBoolIterableMapImpl is AddressBoolIterableMap {
         uint index; // index start 1 to list.length
         bool value;
     }
-    mapping(address => Entry) private map;
-    address[] private list;
+    mapping(address => Entry) internal map;
+    address[] internal list;
 
-    function add(address _key, bool _value) public {
+    function _add(address _key, bool _value) internal {
         Entry storage entry = map[_key];
         entry.value = _value;
         if(entry.index > 0){ // entry exists
@@ -22,7 +22,7 @@ contract AddressBoolIterableMapImpl is AddressBoolIterableMap {
         }
     }
 
-    function remove(address _key) public {
+    function _remove(address _key) internal {
         Entry storage entry = map[_key];
         if(entry.index == 0){ // entry not exist
             // do nothing
@@ -37,25 +37,25 @@ contract AddressBoolIterableMapImpl is AddressBoolIterableMap {
         delete map[_key];
     }
     
-    function size() public view returns (uint) {
+    function _size() internal view returns (uint) {
         return uint(list.length);
     }
     
-    function contains(address _key) public view returns (bool) {
+    function _contains(address _key) internal view returns (bool) {
         return map[_key].index > 0;
     }
     
-    function getByKey(address _key) public view returns (bool) {
+    function _getByKey(address _key) internal view returns (bool) {
         return map[_key].value;
     }
     
-    function getByIndex(uint _index) public view returns (bool) {
+    function _getByIndex(uint _index) internal view returns (bool) {
         require(_index >= 0);
         require(_index < list.length);
         return map[list[_index]].value;
     }
 
-    function getKeys() public view returns (address[]) {
+    function _getKeys() internal view returns (address[]) {
         return list;
     }
 }
