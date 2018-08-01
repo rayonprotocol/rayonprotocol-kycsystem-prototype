@@ -2,7 +2,7 @@ const KycAttesterMap = artifacts.require('./KycAttesterMap.sol')
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol')
 const BorrowerAuthMap = artifacts.require('./BorrowerAuthMap.sol')
 const BorrowerAuthManager = artifacts.require('./BorrowerAuthManager.sol')
-const TestAddressBoolIterableMap = artifacts.require('./TestAddressBoolIterableMap.sol')
+const TestAddressToBoolIterableMap = artifacts.require('./TestAddressToBoolIterableMap.sol')
 
 module.exports = function (deployer) {
   // KycAttesterManager
@@ -14,6 +14,6 @@ module.exports = function (deployer) {
     deployer.deploy(BorrowerAuthManager, BorrowerAuthMap.address);
   });
   
-  // TestAddressBoolIterableMap
-  deployer.deploy(TestAddressBoolIterableMap);
+  // TestAddressToBoolIterableMap
+  deployer.deploy(TestAddressToBoolIterableMap);
 }

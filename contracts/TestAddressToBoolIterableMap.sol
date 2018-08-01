@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import "./AddressBoolIterableMapImpl.sol";
+import "./AddressToBoolIterableMap.sol";
 
-// Simple AddressBoolIterableMap Contract for Test
-contract TestAddressBoolIterableMap is AddressBoolIterableMapImpl {
+// Simple AddressToBoolIterableMap Contract for Test
+contract TestAddressToBoolIterableMap is AddressToBoolIterableMap {
     function add(address _key, bool _value) public {
         super._add(_key, _value);
     }

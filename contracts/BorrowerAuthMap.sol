@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import "./AddressBytes32IterableMapImpl.sol";
+import "./AddressToBytes32IterableMap.sol";
 
 // TODO: add authorization only for permitted account.
-contract BorrowerAuthMap is AddressBytes32IterableMapImpl {
+contract BorrowerAuthMap is AddressToBytes32IterableMap {
     function add(address _key, bytes32 _value) public {
         super._add(_key, _value);
     }

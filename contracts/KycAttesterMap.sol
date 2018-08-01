@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import "./RayonBasic.sol";
-import "./AddressBoolIterableMapImpl.sol";
+import "./RayonBase.sol";
+import "./AddressToBoolIterableMap.sol";
 
-contract KycAttesterMap is AddressBoolIterableMapImpl, RayonBasic {
+contract KycAttesterMap is RayonBase, AddressToBoolIterableMap {
     // Event defination
     event KycAttesterAdded(address indexed attesterId);
     event KycAttesterRemoved(address indexed attesterId);
@@ -37,4 +37,9 @@ contract KycAttesterMap is AddressBoolIterableMapImpl, RayonBasic {
     function getAttesterIds() public view onlyOwner returns (address[]) {
         return super._getKeys();
     }
+
+    function kill() external onlyOwner {
+        selfdestruct(owner);
+    }
+
 }

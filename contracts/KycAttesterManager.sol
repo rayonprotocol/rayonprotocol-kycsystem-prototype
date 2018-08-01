@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import "./RayonBasic.sol";
+import "./RayonBase.sol";
 import "./KycAttesterMap.sol";
 
-contract KycAttesterManager is RayonBasic {
+contract KycAttesterManager is RayonBase {
     KycAttesterMap internal kycAttesterMap;
 
     constructor(address _contractAddress) public {
@@ -44,4 +44,12 @@ contract KycAttesterManager is RayonBasic {
     function getAttesterIds() public view onlyOwner returns (address[]) {
         return kycAttesterMap.getAttesterIds();
     }
+
+    function kill() external onlyOwner {
+        if(kycAttesterMap.owner() == address(this)){
+            super.reclaimOwnershipContract(address(kycAttesterMap));
+        }
+        selfdestruct(owner);
+    }
+
 }
