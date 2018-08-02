@@ -11,6 +11,7 @@ contract KycAttesterManager is RayonBase {
     }
 
     function setKycAttesterMap(address _contractAddress) public onlyOwner {
+        require(_contractAddress != address(0));
         kycAttesterMap = KycAttesterMap(_contractAddress);
     }
     function getKycAttester() public view returns (address) {
@@ -45,6 +46,7 @@ contract KycAttesterManager is RayonBase {
         return kycAttesterMap.getAttesterIds();
     }
 
+    // inherited
     function kill() external onlyOwner {
         if(kycAttesterMap.owner() == address(this)){
             super.reclaimOwnershipContract(address(kycAttesterMap));

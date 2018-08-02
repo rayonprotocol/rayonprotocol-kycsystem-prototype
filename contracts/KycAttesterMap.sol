@@ -9,11 +9,14 @@ contract KycAttesterMap is RayonBase, AddressToBoolIterableMap {
     event KycAttesterRemoved(address indexed attesterId);
 
     function add(address _attesterId) public onlyOwner {
+        require(_attesterId != address(0));
         super._add(_attesterId, true);
         emit KycAttesterAdded(_attesterId);
     }
 
     function remove(address _attesterId) public onlyOwner {
+        require(_attesterId != address(0));
+        require(this.contains(_attesterId));
         super._remove(_attesterId);
         emit KycAttesterRemoved(_attesterId);
     }
@@ -38,6 +41,7 @@ contract KycAttesterMap is RayonBase, AddressToBoolIterableMap {
         return super._getKeys();
     }
 
+    // inherited
     function kill() external onlyOwner {
         selfdestruct(owner);
     }
