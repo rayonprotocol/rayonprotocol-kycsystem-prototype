@@ -4,7 +4,7 @@ import "./RayonBase.sol";
 import "./KycAttesterMap.sol";
 
 contract KycAttesterManager is RayonBase {
-    KycAttesterMap internal kycAttesterMap;
+    KycAttesterMap public kycAttesterMap;
 
     constructor(address _contractAddress) public {
         setKycAttesterMap(_contractAddress);
@@ -13,9 +13,6 @@ contract KycAttesterManager is RayonBase {
     function setKycAttesterMap(address _contractAddress) public onlyOwner {
         require(_contractAddress != address(0));
         kycAttesterMap = KycAttesterMap(_contractAddress);
-    }
-    function getKycAttester() public view returns (address) {
-        return kycAttesterMap;
     }
 
     function add(address _attesterId) public onlyOwner {
@@ -53,5 +50,4 @@ contract KycAttesterManager is RayonBase {
         }
         selfdestruct(owner);
     }
-
 }

@@ -9,6 +9,7 @@ contract AddressToBoolIterableMap {
     address[] internal list;
 
     function _add(address _key, bool _value) internal {
+        require(_key != address(0));
         Entry storage entry = map[_key];
         entry.value = _value;
         if(entry.index > 0){ // entry exists
@@ -21,6 +22,8 @@ contract AddressToBoolIterableMap {
     }
 
     function _remove(address _key) internal {
+        require(_key != address(0));
+        require(_contains(_key));
         Entry storage entry = map[_key];
         if(entry.index == 0){ // entry not exist
             // do nothing
