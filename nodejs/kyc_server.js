@@ -27,7 +27,6 @@ var readlineSync = require('readline-sync');
 var keystorePassword = readlineSync.question('Keystore password: ', { // input keystore file password in stdin
     hideEchoBack: true // The typed text on screen is hidden by `*` (default). 
 });
-console.log("password: " + keystorePassword);
 console.log("");
 
 var keystore = fs.readFileSync(keystoreFilePath).toString();
