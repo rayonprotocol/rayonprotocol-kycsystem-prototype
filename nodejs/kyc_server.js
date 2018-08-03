@@ -58,7 +58,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const port = 3000;
+const port = 8001;
 app.listen(port, function () {
     console.log("KYC Prototype server is running on port " + port + "!");
 });
