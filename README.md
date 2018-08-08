@@ -78,6 +78,7 @@ truffle test
 
 ```
 
+## Built With
 * [Truffle](https://truffleframework.com/) - Ethereum Smart Contract Framework
 * [Solidity](https://github.com/ethereum/solidity) - Used to develop the Reverse Inquiry smart contracts
 * [Node.js](https://nodejs.org/en/) - Server application framework for KYC System
