@@ -25,13 +25,9 @@ git clone https://github.com/rayonprotocol/rayonprotocol-kycsystem-prototype.git
 npm install -g truffle
 ```
 
-- install ganache for use of local development node
+- install [ganache](http://truffleframework.com/ganache/) for use of local development node
 
-http://truffleframework.com/ganache/
-
-- install yarn (for mac)
-
-https://yarnpkg.com/lang/en/docs/install/#mac-stable
+- install [yarn (for mac)](https://yarnpkg.com/lang/en/docs/install/#mac-stable)
 
 - install node_module
 
