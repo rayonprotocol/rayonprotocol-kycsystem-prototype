@@ -1,13 +1,17 @@
 # RayonProtocol KYC System Prototype
 
-This is a prototype of RayonProtocol's KYC system
+This is a prototype of RayonProtocol's KYC System.
 
+## About
 ### Architecture
+ - The KYC System server make a signature on given identity data
+ - KYC Management smart contract verify and register KYC attestation data on blockchain.
 ![kyc_arch](doc/kyc_arch.png)
 
 
-### Development
-#### Installation
+## Getting Started
+
+### Installing
 
 - clone the repository to your local drive
 
@@ -74,4 +78,10 @@ truffle test
 
 ```
 
+* [Truffle](https://truffleframework.com/) - Ethereum Smart Contract Framework
+* [Solidity](https://github.com/ethereum/solidity) - Used to develop the Reverse Inquiry smart contracts
+* [Node.js](https://nodejs.org/en/) - Server application framework for KYC System
+
+## Acknowledgments
+* The real KYC System should connect to external identity verification system before making a signature.
 
