@@ -1,4 +1,11 @@
 var console = require('console');
+var fs = require('fs');
+var readlineSync = require('readline-sync');
+var etherWallet = require('ethereumjs-wallet');
+var Web3 = require('web3');
+var express = require('express');
+var bodyParser = require('body-parser');
+const port = 8001;
 
 function usage() { // print usage
     console.log("usage: node kyc_server.js <keystore filepath>");
@@ -11,7 +18,6 @@ if (process.argv.length <= 2) {
     process.exit(-1);
 }
 
-var fs = require('fs');
 const keystoreFilePath = process.argv[2];
 const keystoreFilePathExists = fs.existsSync(keystoreFilePath); // check if keystore file exists
 if (keystoreFilePathExists) {
@@ -23,14 +29,12 @@ if (keystoreFilePathExists) {
     process.exit(-1);
 }
 
-var readlineSync = require('readline-sync');
 var keystorePassword = readlineSync.question('Keystore password: ', { // input keystore file password in stdin
     hideEchoBack: true // The typed text on screen is hidden by `*` (default). 
 });
 console.log("");
 
 var keystore = fs.readFileSync(keystoreFilePath).toString();
-var etherWallet = require('ethereumjs-wallet');
 var wallet;
 try {
     wallet = etherWallet.fromV3(keystore, keystorePassword); // loading ethereum account from keystore file
@@ -49,15 +53,11 @@ console.log('KYC Attester ID: ' + attesterId);
 console.log("");
 
 // starting restapi server
-var Web3 = require('web3');
 var web3 = new Web3();
-var express = require('express');
-var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const port = 8001;
 app.listen(port, function () {
     console.log("KYC Prototype server is running on port " + port + "!");
 });

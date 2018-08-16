@@ -1,17 +1,38 @@
 {
-  "name": "rayonprotocol-kyc-prototype",
-  "version": "0.1.0",
-  "main": "index.js",
-  "license": "MIT",
+  "name": "rayonprotocol-kyc-system-prototype",
+  "version": "1.0.0",
+  "description": "This is a prototype of RayonProtocol's KYC System.",
+  "main": "truffle.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "ethereumjs-wallet": "^0.6.0",
+    "ethereumjs-wallet": "^0.6.2",
     "express": "^4.16.3",
-    "openzeppelin-solidity": "^1.11.0",
+    "openzeppelin-solidity": "^1.12.0",
     "readline-sync": "^1.4.9",
     "sync-request": "^6.0.0",
-    "web3": "^1.0.0-beta.34"
-  }
+    "web3": "^1.0.0-beta.35"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rayonprotocol/rayonprotocol-kyc-system-prototype.git"
+  },
+  "keywords": [
+    "kyc"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rayonprotocol/rayonprotocol-kyc-system-prototype/issues"
+  },
+  "homepage": "https://github.com/rayonprotocol/rayonprotocol-kyc-system-prototype#readme"
 }
