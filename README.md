@@ -4,8 +4,8 @@ This is a prototype of RayonProtocol's KYC System.
 
 ## About
 ### Architecture
- - The KYC System server make a signature on given identity data
- - KYC Management smart contract verify and register KYC attestation data on blockchain.
+ - The Rayon KYC System server signs provided identity data
+ - KYC Management smart contract verifies and registers KYC attestation data on the blockchain.
 ![kyc_arch](doc/kyc_arch.png)
 
 
@@ -80,5 +80,5 @@ truffle test
 * [Node.js](https://nodejs.org/en/) - Server application framework for KYC System
 
 ## Acknowledgments
-* The real KYC System should connect to external identity verification system before making a signature.
+* In practice, the Rayon KYC System will connect to an external (third party) KYC service provider before making a signature.
 
