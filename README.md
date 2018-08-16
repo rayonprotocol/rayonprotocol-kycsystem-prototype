@@ -16,7 +16,17 @@ This is a prototype of RayonProtocol's KYC System.
 - clone the repository to your local drive
 
 ```
-git clone https://github.com/rayonprotocol/rayonprotocol-kycsystem-prototype.git
+$ git clone https://github.com/rayonprotocol/rayonprotocol-kycsystem-prototype.git
+```
+
+### git submodule init & update
+
+- Initialize the submodule 'rayonprotocol-common-contract'.
+
+```
+$ cd rayonprotocol-kycsystem-prototype
+$ git submodule init
+$ git submodule update
 ```
 
 - install truffle
@@ -27,13 +37,10 @@ npm install -g truffle
 
 - install [ganache](http://truffleframework.com/ganache/) for use of local development node
 
-- install [yarn (for mac)](https://yarnpkg.com/lang/en/docs/install/#mac-stable)
-
 - install node_module
 
 ```
-cd rayonprotocol-kycsystem-prototype
-yarn
+$ npm install 
 ```
 
 #### Deployment
@@ -41,8 +48,7 @@ yarn
 - deploy smart contracts
 
 ```
-truffle deploy
-
+$ truffle deploy
 ```
 
 #### Execution
@@ -50,8 +56,8 @@ truffle deploy
 - start kyc system server
 
 ```
-cd nodejs
-node kyc_server.js <keystore file>
+$ cd nodejs
+$ node kyc_server.js <keystore file>
 
 KYC Attester's keystore filepath: <keystore file>, exists: true
 
@@ -70,7 +76,7 @@ KYC Prototype server is running on port 8001!
 - execute test scripts
 
 ```
-truffle test
+$ truffle test
 
 ```
 
