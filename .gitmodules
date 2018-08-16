@@ -1,0 +1,3 @@
+[submodule "contracts/rayonprotocol-common-contract"]
+	path = contracts/rayonprotocol-common-contract
+	url = https://github.com/rayonprotocol/rayonprotocol-common-contract.git

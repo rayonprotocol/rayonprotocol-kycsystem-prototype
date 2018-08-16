@@ -1,6 +1,6 @@
 pragma solidity ^0.4.19;
 
-import "./RayonBase.sol";
+import "./rayonprotocol-common-contract/RayonBase.sol";
 import "./AddressToBytes32IterableMap.sol";
 
 contract BorrowerAuthMap is RayonBase, AddressToBytes32IterableMap {

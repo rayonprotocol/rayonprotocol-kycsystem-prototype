@@ -1,6 +1,6 @@
 pragma solidity ^0.4.19;
 
-import "./RayonBase.sol";
+import "./rayonprotocol-common-contract/RayonBase.sol";
 import "./KycAttesterMap.sol";
 
 contract KycAttesterManager is RayonBase {
