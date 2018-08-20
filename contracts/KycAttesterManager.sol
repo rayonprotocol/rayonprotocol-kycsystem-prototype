@@ -1,53 +1,40 @@
 pragma solidity ^0.4.19;
 
-import "./rayonprotocol-common-contract/RayonBase.sol";
-import "./KycAttesterMap.sol";
+import "./KycAttesterManagerInterface.sol";
+import "./AddressToBoolIterableMap.sol";
 
-contract KycAttesterManager is RayonBase {
-    KycAttesterMap public kycAttesterMap;
-
-    constructor(address _contractAddress) public {
-        setKycAttesterMap(_contractAddress);
-    }
-
-    function setKycAttesterMap(address _contractAddress) public onlyOwner {
-        require(_contractAddress != address(0));
-        kycAttesterMap = KycAttesterMap(_contractAddress);
-    }
+contract KycAttesterManager is KycAttesterManagerInterface, AddressToBoolIterableMap {
+    // Event defination
+    event KycAttesterAdded(address indexed attesterId);
+    event KycAttesterRemoved(address indexed attesterId);
 
     function add(address _attesterId) public onlyOwner {
-        kycAttesterMap.add(_attesterId);
+        super._add(_attesterId, true);
+        emit KycAttesterAdded(_attesterId);
     }
 
     function remove(address _attesterId) public onlyOwner {
-        kycAttesterMap.remove(_attesterId);
+        super._remove(_attesterId);
+        emit KycAttesterRemoved(_attesterId);
     }
     
     function size() public view onlyOwner returns (uint) {
-        return kycAttesterMap.size();
+        return super._size();
     }
     
     function contains(address _attesterId) public view returns (bool) {
-        return kycAttesterMap.contains(_attesterId);
+        return super._contains(_attesterId);
     }
     
     function getByAttesterId(address _attesterId) public view returns (bool) {
-        return kycAttesterMap.getByAttesterId(_attesterId);
+        return super._getByKey(_attesterId);
     }
     
     function getByIndex(uint _index) public view onlyOwner returns (bool) {
-        return kycAttesterMap.getByIndex(_index);
+        return super._getByIndex(_index);
     }
 
     function getAttesterIds() public view onlyOwner returns (address[]) {
-        return kycAttesterMap.getAttesterIds();
-    }
-
-    // inherited
-    function kill() external onlyOwner {
-        if(kycAttesterMap.owner() == address(this)){
-            super.reclaimOwnershipContract(address(kycAttesterMap));
-        }
-        selfdestruct(owner);
+        return super._getKeys();
     }
 }
