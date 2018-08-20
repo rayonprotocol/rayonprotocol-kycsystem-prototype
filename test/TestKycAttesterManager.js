@@ -162,7 +162,7 @@ contract('KycAttesterManager', function (accounts) {
         })
     })
 
-    describe('change to new kycAttesterManager with previous kybAttesterMap', function () {
+    describe('change to new kycAttesterManager', function () {
         it('add attesters to kybAttesterMap', async function () {
             await kycAttesterManagerInterface.add(attester1, { from: admin }).should.be.fulfilled;
             await kycAttesterManagerInterface.add(attester2, { from: admin }).should.be.fulfilled;
@@ -170,9 +170,9 @@ contract('KycAttesterManager', function (accounts) {
             assert.equal(await kycAttesterManagerInterface.getByAttesterId(attester1, { from: admin }), true);
             assert.equal(await kycAttesterManagerInterface.getByAttesterId(attester2, { from: admin }), true);
         })
-        // it('kill only kycAttesterManager', async function () {
-        //     await kycAttesterManagerInterface.kill({ from: admin }).should.be.fulfilled;
-        // })
+        it('kill only kycAttesterManager', async function () {
+            await kycAttesterManager.kill({ from: admin }).should.be.fulfilled;
+        })
         it('deploy new kycAttesterManager', async function () {
             kycAttesterManager = await KycAttesterManager.new({ from: admin });
             console.log('new kycAttesterManager is deployed: ' + kycAttesterManager.address);
@@ -188,6 +188,7 @@ contract('KycAttesterManager', function (accounts) {
     })
 
     after(async function () {
+        // kill kycAttesterManagerInterface
         await kycAttesterManagerInterface.kill({ from: admin }).should.be.fulfilled;
 
         // check if kycAttesterManagerInterface is killed
