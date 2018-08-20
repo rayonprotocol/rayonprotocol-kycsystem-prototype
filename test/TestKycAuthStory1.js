@@ -1,7 +1,8 @@
-const KycAttesterMap = artifacts.require('./KycAttesterMap.sol');
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
-const BorrowerAuthMap = artifacts.require('./BorrowerAuthMap.sol');
+const KycAttesterManagerInterface = artifacts.require('./KycAttesterManagerInterface.sol');
 const BorrowerAuthManager = artifacts.require('./BorrowerAuthManager.sol');
+const BorrowerAuthManagerInterface = artifacts.require('./BorrowerAuthManagerInterface.sol');
+const Proxy = artifacts.require('./rayonprotocol-common-contract/Proxy.sol');
 const httpRequest = require('sync-request');
 
 require('chai')
@@ -9,7 +10,11 @@ require('chai')
     .should();
 
 var kycAttesterManager;
+var kycAttesterManagerInterface;
+var kycAttesterManagerProxy;
 var borrowerAuthManager;
+var borrowerAuthManagerInterface;
+var borrowerAuthManagerProxy;
 var kycAttesterId;
 contract('KycAuthStory1', function (accounts) {
     const kycSystemUrl = 'http://localhost:8001/';
@@ -21,20 +26,18 @@ contract('KycAuthStory1', function (accounts) {
 
     before(async function () {
         // Contract deploy
-        var kycAttesterMap = await KycAttesterMap.new();
-        kycAttesterManager = await KycAttesterManager.new(kycAttesterMap.address);
-        console.log('kycAttesterMap is deployed: ' + kycAttesterMap.address);
+        kycAttesterManager = await KycAttesterManager.new({ from: admin });
         console.log('kycAttesterManager is deployed: ' + kycAttesterManager.address);
-        var borrowerAuthMap = await BorrowerAuthMap.new();
-        borrowerAuthManager = await BorrowerAuthManager.new(borrowerAuthMap.address);
-        console.log('borrowerAuthMap is deployed: ' + borrowerAuthMap.address);
+        borrowerAuthManager = await BorrowerAuthManager.new({ from: admin });
         console.log('borrowerAuthManager is deployed: ' + borrowerAuthManager.address);
 
-        // transfer ownership
-        await kycAttesterMap.transferOwnership(kycAttesterManager.address, { from: admin }).should.be.fulfilled;
-        await kycAttesterManager.claimOwnershipContract(kycAttesterMap.address, { from: admin }).should.be.fulfilled;
-        await borrowerAuthMap.transferOwnership(borrowerAuthManager.address, { from: admin }).should.be.fulfilled;
-        await borrowerAuthManager.claimOwnershipContract(borrowerAuthMap.address, { from: admin }).should.be.fulfilled;
+        // Proxy setting
+        kycAttesterManagerProxy = await Proxy.new(kycAttesterManager.address, { from: admin });
+        kycAttesterManagerInterface = await KycAttesterManagerInterface.at(kycAttesterManagerProxy.address, { from: admin });
+        console.log('kycAttesterManagerInterface is deployed: ' + kycAttesterManagerInterface.address);
+        borrowerAuthManagerProxy = await Proxy.new(borrowerAuthManager.address, { from: admin });
+        borrowerAuthManagerInterface = await BorrowerAuthManagerInterface.at(borrowerAuthManagerProxy.address, { from: admin });
+        console.log('borrowerAuthManagerInterface is deployed: ' + borrowerAuthManagerInterface.address);
 
         // account list
         console.log('Account list:');
@@ -58,16 +61,16 @@ contract('KycAuthStory1', function (accounts) {
         })
         it("add attesterId to kycAttesterManager", async function () {
             // console.log('KYC Attester ID2 : ' + kycAttesterId);
-            await kycAttesterManager.add(kycAttesterId, { from: admin }).should.be.fulfilled;
+            await kycAttesterManagerInterface.add(kycAttesterId, { from: admin }).should.be.fulfilled;
         })
         it('size of list', async function () {
-            assert.equal(await kycAttesterManager.size({ from: admin }), 1);
-            assert.equal((await kycAttesterManager.getAttesterIds({ from: admin })).length, 1);
+            assert.equal(await kycAttesterManagerInterface.size({ from: admin }), 1);
+            assert.equal((await kycAttesterManagerInterface.getAttesterIds({ from: admin })).length, 1);
         })
         it('attesters', async function () {
-            assert.equal(await kycAttesterManager.contains(kycAttesterId, { from: admin }), true);
-            assert.equal(await kycAttesterManager.getByAttesterId(kycAttesterId, { from: admin }), true);
-            assert.equal(await kycAttesterManager.getByIndex(0, { from: admin }), true);
+            assert.equal(await kycAttesterManagerInterface.contains(kycAttesterId, { from: admin }), true);
+            assert.equal(await kycAttesterManagerInterface.getByAttesterId(kycAttesterId, { from: admin }), true);
+            assert.equal(await kycAttesterManagerInterface.getByIndex(0, { from: admin }), true);
         })
     })
     describe('Store authentication signature of borrower1 to borrowerAuthManager', function () {
@@ -90,16 +93,16 @@ contract('KycAuthStory1', function (accounts) {
             s = httpResponseBody.s;
         })
         it('call verifyAndAddBorrowerAuth function', async function () {
-            await borrowerAuthManager.verifyAndAddBorrowerAuth(kycAttesterId, authHash, v, r, s, { from: borrower.address }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.verifyAndAddBorrowerAuth(kycAttesterId, authHash, v, r, s, { from: borrower.address }).should.be.fulfilled;
         })
         it('size of list', async function () {
-            assert.equal(await borrowerAuthManager.size({ from: admin }), 1);
-            assert.equal((await borrowerAuthManager.getBorrowers({ from: admin })).length, 1);
+            assert.equal(await borrowerAuthManagerInterface.size({ from: admin }), 1);
+            assert.equal((await borrowerAuthManagerInterface.getBorrowers({ from: admin })).length, 1);
         })
         it('borrowerAuth', async function () {
-            assert.equal(await borrowerAuthManager.contains(borrower.address, { from: admin }), true);
-            assert.equal(await borrowerAuthManager.getBorrowerAuthByAddress(borrower.address, { from: admin }), authHash);
-            assert.equal(await borrowerAuthManager.getBorrowerAuthByIndex(0, { from: admin }), authHash);
+            assert.equal(await borrowerAuthManagerInterface.contains(borrower.address, { from: admin }), true);
+            assert.equal(await borrowerAuthManagerInterface.getByAddress(borrower.address, { from: admin }), authHash);
+            assert.equal(await borrowerAuthManagerInterface.getByIndex(0, { from: admin }), authHash);
         })
     })
     describe('lender get authentication signature of borrower1', function () {
@@ -107,7 +110,7 @@ contract('KycAuthStory1', function (accounts) {
         it("get signature of borrower1\'s auth and compare", async function () {
             const authIdFromBorrower = borrower.authId;
             const authHashFromBorrower = web3.sha3(borrower.authId);
-            const authHashFromContract = await borrowerAuthManager.getBorrowerAuthByAddress(borrower.address, { from: lender });
+            const authHashFromContract = await borrowerAuthManagerInterface.getByAddress(borrower.address, { from: lender });
             assert.equal(authHashFromBorrower, authHashFromContract);
         })
     })
