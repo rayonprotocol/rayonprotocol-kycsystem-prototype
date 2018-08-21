@@ -11,9 +11,10 @@ var borrowerAuthManagerInterface;
 var borrowerAuthManagerProxy;
 contract('BorrowerAuthManager', function (accounts) {
     const admin = accounts[0];
-    const borrower1 = accounts[1];
-    const borrower2 = accounts[2];
-    const guest = accounts[3];
+    const newAdmin = accounts[1];
+    const borrower1 = accounts[2];
+    const borrower2 = accounts[3];
+    const guest = accounts[4];
 
     before(async function () {
         borrowerAuthManager = await BorrowerAuthManager.new({ from: admin });
@@ -119,30 +120,68 @@ contract('BorrowerAuthManager', function (accounts) {
         })
     })
 
+    describe('change admin and check function permissions', function () {
+        it('transfer ownership to newAdmin', async function () {
+            // transferOwnership -> to pendingOwner
+            await borrowerAuthManagerInterface.transferOwnership(newAdmin, { from: admin }).should.be.fulfilled;
+            assert.equal(await borrowerAuthManagerInterface.owner({ from: admin }), admin);
+            assert.equal(await borrowerAuthManagerInterface.pendingOwner({ from: admin }), newAdmin);
+
+            // claimOwnership
+            await borrowerAuthManagerInterface.claimOwnership({ from: newAdmin }).should.be.fulfilled;
+            assert.equal(await borrowerAuthManagerInterface.owner({ from: newAdmin }), newAdmin);
+            assert.equal(await borrowerAuthManagerInterface.pendingOwner({ from: newAdmin }), 0);
+        })
+        it('function calls from admin', async function () {
+            await borrowerAuthManagerInterface.owner({ from: newAdmin }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.pendingOwner({ from: newAdmin }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.size({ from: newAdmin }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.contains(borrower1, { from: newAdmin }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.getByAddress(borrower1, { from: newAdmin }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.getByIndex(0, { from: newAdmin }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.getBorrowers({ from: newAdmin }).should.be.fulfilled;
+        })
+        it('function calls from guest', async function () {
+            await borrowerAuthManagerInterface.owner({ from: guest }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.pendingOwner({ from: guest }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.size({ from: guest }).should.be.rejectedWith(/revert/);
+            await borrowerAuthManagerInterface.contains(borrower1, { from: guest }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.getByAddress(borrower1, { from: guest }).should.be.fulfilled;
+            await borrowerAuthManagerInterface.getByIndex(0, { from: guest }).should.be.rejectedWith(/revert/);
+            await borrowerAuthManagerInterface.getBorrowers({ from: guest }).should.be.rejectedWith(/revert/);
+        })
+    })
+
     describe('change to new borrowerAuthManager', function () {
         it('check size of list', async function () {
-            assert.equal(await borrowerAuthManagerInterface.size({ from: admin }), 1);
+            assert.equal(await borrowerAuthManagerInterface.size({ from: newAdmin }), 1);
         })
         it('kill only borrowerAuthManager', async function () {
             await borrowerAuthManager.kill({ from: admin }).should.be.fulfilled;
+
+            // check if borrowerAuthManager is killed
+            await borrowerAuthManager.size({ from: admin }).should.be.rejectedWith(Error);
+
+            // but borrowerAuthManagerInterface is working
+            await borrowerAuthManagerInterface.size({ from: newAdmin }).should.be.fulfilled;
         })
         it('deploy new borrowerAuthManager', async function () {
-            borrowerAuthManager = await BorrowerAuthManager.new({ from: admin });
+            borrowerAuthManager = await BorrowerAuthManager.new({ from: newAdmin });
             console.log('new borrowerAuthManager is deployed: ' + borrowerAuthManager.address);
 
             // change target contract of Proxy
-            borrowerAuthManagerProxy.setTargetAddress(borrowerAuthManager.address, { from: accounts[0] });
+            borrowerAuthManagerProxy.setTargetAddress(borrowerAuthManager.address, { from: newAdmin });
         })
         it('check size of list', async function () {
-            assert.equal(await borrowerAuthManagerInterface.size({ from: admin }), 1);
+            assert.equal(await borrowerAuthManagerInterface.size({ from: newAdmin }), 1);
         })
     })
 
     after(async function () {
         // kill borrowerAuthManagerInterface
-        await borrowerAuthManagerInterface.kill({ from: admin }).should.be.fulfilled;
+        await borrowerAuthManagerInterface.kill({ from: newAdmin }).should.be.fulfilled;
 
         // check if borrowerAuthManagerInterface is killed
-        await borrowerAuthManagerInterface.owner({ from: admin }).should.be.rejectedWith(Error);
+        await borrowerAuthManagerInterface.owner({ from: newAdmin }).should.be.rejectedWith(Error);
     })
 })
