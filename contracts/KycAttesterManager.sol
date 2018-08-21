@@ -5,17 +5,17 @@ import "./AddressToBoolIterableMap.sol";
 
 contract KycAttesterManager is KycAttesterManagerInterface, AddressToBoolIterableMap {
     // Event defination
-    event KycAttesterAdded(address indexed attesterId);
-    event KycAttesterRemoved(address indexed attesterId);
+    event LogKycAttesterAdded(address indexed attesterId);
+    event LogKycAttesterRemoved(address indexed attesterId);
 
     function add(address _attesterId) public onlyOwner {
         super._add(_attesterId, true);
-        emit KycAttesterAdded(_attesterId);
+        emit LogKycAttesterAdded(_attesterId);
     }
 
     function remove(address _attesterId) public onlyOwner {
         super._remove(_attesterId);
-        emit KycAttesterRemoved(_attesterId);
+        emit LogKycAttesterRemoved(_attesterId);
     }
     
     function size() public view onlyOwner returns (uint) {

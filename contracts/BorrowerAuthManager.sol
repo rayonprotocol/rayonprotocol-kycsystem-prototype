@@ -5,8 +5,8 @@ import "./AddressToBytes32IterableMap.sol";
 
 contract BorrowerAuthManager is BorrowerAuthManagerInterface, AddressToBytes32IterableMap {
     // Event defination
-    event BorrowerAuthAdded(address indexed borrower);
-    event BorrowerAuthRemoved(address indexed borrower);
+    event LogBorrowerAuthAdded(address indexed borrower);
+    event LogBorrowerAuthRemoved(address indexed borrower);
 
     function verifyAndAddBorrowerAuth(address kycAttesterId, bytes32 authHash, uint8 v, bytes32 r, bytes32 s) public {
         require(!contains(msg.sender)); // update not allowed
@@ -17,12 +17,12 @@ contract BorrowerAuthManager is BorrowerAuthManagerInterface, AddressToBytes32It
 
         require(kycAttesterId == signedAddress); // signature is verified
         super._add(msg.sender, authHash);
-        emit BorrowerAuthAdded(msg.sender);
+        emit LogBorrowerAuthAdded(msg.sender);
     }
 
     function remove(address _borrower) public {
         require(false); // remove not allowed
-        // emit BorrowerAuthRemoved(_borrower);
+        // emit LogBorrowerAuthRemoved(_borrower);
     }
 
     function size() public view onlyOwner returns (uint) {
