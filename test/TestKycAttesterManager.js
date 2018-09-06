@@ -1,6 +1,6 @@
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
 const KycAttesterManagerInterface = artifacts.require('./KycAttesterManagerInterface.sol');
-const Proxy = artifacts.require('./rayonprotocol-common-contract/Proxy.sol');
+const Proxy = artifacts.require('./common/Proxy.sol');
 
 require('chai')
     .use(require('chai-as-promised'))

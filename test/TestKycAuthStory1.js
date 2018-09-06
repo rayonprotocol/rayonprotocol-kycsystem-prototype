@@ -2,7 +2,7 @@ const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
 const KycAttesterManagerInterface = artifacts.require('./KycAttesterManagerInterface.sol');
 const BorrowerAuthManager = artifacts.require('./BorrowerAuthManager.sol');
 const BorrowerAuthManagerInterface = artifacts.require('./BorrowerAuthManagerInterface.sol');
-const Proxy = artifacts.require('./rayonprotocol-common-contract/Proxy.sol');
+const Proxy = artifacts.require('./common/Proxy.sol');
 const httpRequest = require('sync-request');
 
 require('chai')

@@ -1,6 +1,6 @@
 const BorrowerAuthManager = artifacts.require('./BorrowerAuthManager.sol');
 const BorrowerAuthManagerInterface = artifacts.require('./BorrowerAuthManagerInterface.sol');
-const Proxy = artifacts.require('./rayonprotocol-common-contract/Proxy.sol');
+const Proxy = artifacts.require('./common/Proxy.sol');
 
 require('chai')
     .use(require('chai-as-promised'))

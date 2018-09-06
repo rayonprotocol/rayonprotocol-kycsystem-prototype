@@ -1,6 +1,6 @@
 const KycAttesterManager = artifacts.require('./KycAttesterManager.sol');
 const BorrowerAuthManager = artifacts.require('./BorrowerAuthManager.sol');
-const Proxy = artifacts.require('./rayonprotocol-common-contract/Proxy.sol');
+const Proxy = artifacts.require('./common/Proxy.sol');
 
 module.exports = function (deployer) {
 	// KycAttesterManager
