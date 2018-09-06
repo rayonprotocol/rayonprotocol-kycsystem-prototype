@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-import "./rayonprotocol-common-contract/RayonBase.sol";
+import "./common/RayonBase.sol";
 
 contract BorrowerAuthManagerInterface is RayonBase {
     function verifyAndAddBorrowerAuth(address kycAttesterId, bytes32 authHash, uint8 v, bytes32 r, bytes32 s) public;

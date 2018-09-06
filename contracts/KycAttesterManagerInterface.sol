@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-import "./rayonprotocol-common-contract/RayonBase.sol";
+import "./common/RayonBase.sol";
 
 contract KycAttesterManagerInterface is RayonBase {
     function add(address _attesterId) public;
